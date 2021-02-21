@@ -1,158 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+//import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import '../model/dat.dart';
+import '../model/model.dart';
+import 'product.dart';
 //import './persistent_bottom.dart';
 
+// ignore: must_be_immutable
 class MainScreen extends StatelessWidget {
   final BuildContext menuScreenContext;
   final Function onScreenHideButtonPressed;
   final bool hideStatus;
-  const MainScreen(
+  MainScreen(
       {Key key,
       this.menuScreenContext,
       this.onScreenHideButtonPressed,
       this.hideStatus = false})
       : super(key: key);
-
+  final Data das = Data();
+  List<Model> imh;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: SizedBox(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height - 155,
         width: MediaQuery.of(context).size.width,
         child: Scaffold(
           backgroundColor: Colors.grey,
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(
-              //       horizontal: 30.0, vertical: 20.0),
-              //   child: TextField(
-              //     decoration: InputDecoration(hintText: "Test Text Field"),
-              //   ),
-              // ),
-              // Center(
-              //   child: RaisedButton(
-              //     color: Colors.blue,
-              //     onPressed: () {
-              //       pushNewScreenWithRouteSettings(
-              //         context,
-              //         settings: RouteSettings(name: '/home'),
-              //         screen: MainScreen2(),
-              //         pageTransitionAnimation:
-              //             PageTransitionAnimation.scaleRotate,
-              //       );
-              //     },
-              //     child: Text(
-              //       "Go to Second Screen ->",
-              //       style: TextStyle(color: Colors.white),
-              //     ),
-              //   ),
-              // ),
-              // Center(
-              //   child: RaisedButton(
-              //     color: Colors.deepOrange,
-              //     onPressed: () {
-              //       showModalBottomSheet(
-              //         context: context,
-              //         backgroundColor: Colors.white,
-              //         useRootNavigator: true,
-              //         builder: (context) => Center(
-              //           child: RaisedButton(
-              //             onPressed: () {
-              //               Navigator.pop(context);
-              //             },
-              //             color: Colors.blue,
-              //             child: Text(
-              //               "Exit",
-              //               style: TextStyle(color: Colors.white),
-              //             ),
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //     child: Text(
-              //       "Push bottom sheet on TOP of Nav Bar",
-              //       style: TextStyle(color: Colors.white),
-              //     ),
-              //   ),
-              // ),
-              // Center(
-              //   child: RaisedButton(
-              //     color: Colors.deepOrange,
-              //     onPressed: () {
-              //       showModalBottomSheet(
-              //         context: context,
-              //         backgroundColor: Colors.white,
-              //         useRootNavigator: false,
-              //         builder: (context) => Center(
-              //           child: RaisedButton(
-              //             onPressed: () {
-              //               Navigator.pop(context);
-              //             },
-              //             color: Colors.blue,
-              //             child: Text(
-              //               "Exit",
-              //               style: TextStyle(color: Colors.white),
-              //             ),
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //     child: Text(
-              //       "Push bottom sheet BEHIND the Nav Bar",
-              //       style: TextStyle(color: Colors.white),
-              //     ),
-              //   ),
-              // ),
-              // Center(
-              //   child: RaisedButton(
-              //     color: Colors.lime,
-              //     onPressed: () {
-              //       pushDynamicScreen(context,
-              //           screen: SampleModalScreen(), withNavBar: true);
-              //     },
-              //     child: Text(
-              //       "Push Dynamic/Modal Screen",
-              //       style: TextStyle(color: Colors.white),
-              //     ),
-              //   ),
-              // ),
-              // Center(
-              //   child: RaisedButton(
-              //     color: Colors.purpleAccent,
-              //     onPressed: () {
-              //       this.onScreenHideButtonPressed();
-              //     },
-              //     child: Text(
-              //       this.hideStatus
-              //           ? "Unhide Navigation Bar"
-              //           : "Hide Navigation Bar",
-              //       style: TextStyle(color: Colors.white),
-              //     ),
-              //   ),
-              // ),
-              // Center(
-              //   child: RaisedButton(
-              //     color: Colors.red,
-              //     onPressed: () {
-              //       // Navigator.of(this.menuScreenContext).pop();
-              //     },
-              //     child: Text(
-              //       "<- Main Menu",
-              //       style: TextStyle(color: Colors.white),
-              //     ),
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 60.0,
-              // ),
-            ],
+          body: ListView.builder(
+            itemCount: das.dat.length,
+            itemBuilder: (ctx, index) {
+              return ProdOverview(
+                title: das.dat[index].title,
+                descr: das.dat[index].descr,
+                imgUrl: das.dat[index].imgUrl,
+              );
+            },
           ),
+          //]),
+          //floatingActionButton: FloatingActionButton(
+          // onPressed: () {},
+          //tooltip: 'Increment',
+          // child: Icon(Icons.add),
+          //),
         ),
       ),
+      //),
     );
   }
 }
@@ -172,14 +65,19 @@ class MainScreen2 extends StatelessWidget {
               RaisedButton(
                 color: Colors.indigo,
                 onPressed: () {
-                  pushNewScreen(context, screen: MainScreen3());
+                  launch(('tel:+91 9100206262'));
+                  // pushNewScreen(context, screen: MainScreen3());
                 },
                 child: Text(
-                  "Go to Third Screen",
-                  style: TextStyle(color: Colors.white),
+                  "Make a call to get Groceries",
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500),
+                  //style: TextStyle(color: Colors.white),
                 ),
               ),
-              RaisedButton(
+              /*RaisedButton(
                 color: Colors.indigo,
                 onPressed: () {
                   Navigator.pop(context);
@@ -188,7 +86,7 @@ class MainScreen2 extends StatelessWidget {
                   "Go Back to First Screen",
                   style: TextStyle(color: Colors.white),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),
@@ -203,16 +101,16 @@ class MainScreen3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepOrangeAccent,
+      backgroundColor: Colors.teal,
       body: Container(
         child: Center(
           child: RaisedButton(
-            color: Colors.blue,
+            color: Colors.indigo,
             onPressed: () {
-              Navigator.pop(context);
+              //Navigator.pop(context);
             },
             child: Text(
-              "Go Back to Second Screen",
+              "Not Yet implemented Will be out soon\n                       In next Version",
               style: TextStyle(color: Colors.white),
             ),
           ),

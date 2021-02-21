@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:url_launcher/url_launcher.dart';
 //import './User_interface/persistent_bottom.dart';
 //import './User_interface/custom_widget.dart';
 import './User_interface/Home.dart';
+import './User_interface/orders.dart';
+import './database/provider.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,25 +15,28 @@ BuildContext testContext;
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      //debugShowcheckedmode,
-      title: 'Persistent Bottom Navigation Bar example project',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: ProvidedStylesExample(
-        menuScreenContext: context,
-      ),
+    return ChangeNotifierProvider.value(
+      value: GreatPlaces(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        //debugShowcheckedmode,
+        title: 'Persistent Bottom Navigation Bar example project',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: ProvidedStylesExample(
+          menuScreenContext: context,
+        ),
 
-      //MainMenu(),
-      initialRoute: '/',
-      routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        '/first': (context) => MainScreen2(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
-        '/second': (context) => MainScreen3(),
-      },
+        //MainMenu(),
+        initialRoute: '/',
+        routes: {
+          // When navigating to the "/" route, build the FirstScreen widget.
+          '/first': (context) => MainScreen2(),
+          // When navigating to the "/second" route, build the SecondScreen widget.
+          '/second': (context) => MainScreen3(),
+        },
+      ),
     );
   }
 }
@@ -112,24 +119,24 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
           });
         },
       ),
-      MainScreen(
-        menuScreenContext: widget.menuScreenContext,
-        hideStatus: _hideNavBar,
-        onScreenHideButtonPressed: () {
-          setState(() {
-            _hideNavBar = !_hideNavBar;
-          });
-        },
-      ),
-      MainScreen(
-        menuScreenContext: widget.menuScreenContext,
-        hideStatus: _hideNavBar,
-        onScreenHideButtonPressed: () {
-          setState(() {
-            _hideNavBar = !_hideNavBar;
-          });
-        },
-      ),
+      MainScreen2(
+          // menuScreenContext: widget.menuScreenContext,
+          // hideStatus: _hideNavBar,
+          // onScreenHideButtonPressed: () {
+          //   setState(() {
+          //     _hideNavBar = !_hideNavBar;
+          //   });
+          // },
+          ),
+      MainScreen3(
+          // menuScreenContext: widget.menuScreenContext,
+          // hideStatus: _hideNavBar,
+          // onScreenHideButtonPressed: () {
+          //   setState(() {
+          //     _hideNavBar = !_hideNavBar;
+          //   });
+          // },
+          ),
       // MainScreen(
       //   menuScreenContext: widget.menuScreenContext,
       //   hideStatus: _hideNavBar,
@@ -192,15 +199,91 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
     return Scaffold(
       appBar: AppBar(title: const Text('Daily Fresh')),
       drawer: Drawer(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text('This is the Drawer'),
-            ],
-          ),
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.green[300],
+              ),
+            ),
+            Divider(
+              //thickness: 2.0,
+              color: Colors.black,
+            ),
+            ListTile(
+              title: Text(
+                'Contact chef',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () {
+                launch(('tel:+91 9100206262'));
+                //_auth.signOut();
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                // Navigator.pop(context);
+              },
+            ),
+            Divider(
+              thickness: 1.0,
+              color: Colors.black,
+            ),
+            ListTile(
+              title: Text(
+                'Orders',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PlacesListScreen(), //WebViewa(),
+                  ),
+                );
+
+                /*****/
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                //Navigator.pop(context);
+              },
+            ),
+            Divider(
+              //thickness: 2.0,
+              color: Colors.black,
+            ),
+          ],
         ),
       ),
+      // drawer: Drawer(
+      //   child: Center(
+      //     child: Column(
+      //       mainAxisAlignment: MainAxisAlignment.center,
+      //       children: <Widget>[
+      //         const Text('This is the Drawer'),
+      //       ],
+      //     ),
+      //   ),
+      // ),
       body: PersistentTabView(
         context,
         controller: _controller,
@@ -225,14 +308,14 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
             '/second': (context) => MainScreen3(),
           },
         ),
-        onWillPop: () async {
+        /* onWillPop: () async {
           await showDialog(
             context: context,
             useSafeArea: true,
             builder: (context) => Container(
               height: 50.0,
               width: 50.0,
-              color: Colors.white,
+              color: Colors.grey,
               child: RaisedButton(
                 child: Text("Close"),
                 onPressed: () {
@@ -242,7 +325,7 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
             ),
           );
           return false;
-        },
+        },*/
         selectedTabScreenContext: (context) {
           testContext = context;
         },

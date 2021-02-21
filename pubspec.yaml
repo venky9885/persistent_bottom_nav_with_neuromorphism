@@ -23,13 +23,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cool_alert:
+  url_launcher:
+  #cool_alert:
+  awesome_dialog:
   provider:
+  http:
   path_provider:
   path:
   sqflite:
-  fluttertoast:
-  flutter_neumorphic:
+  #fluttertoast:
+  #flutter_neumorphic:
   persistent_bottom_nav_bar:
 
 
